@@ -23,6 +23,16 @@ class text_Tests(unittest.TestCase):
         self.assertTrue(isinstance(result, text_type))
         self.assertEqual(result, text_type(b"La Pe\xc3\xb1a", "utf-8"))
 
+    def test_parse_qsl_does_not_error(self):
+        from webob.compat import parse_qsl_text, PY2
+        if PY2:
+            qs = b"foo=\xffwut&bar=baz"
+            result = [v for v in parse_qsl_text(qs)]
+        else:
+            qs = str("foo=\xffwut&bar=baz")
+            result = [v for v in parse_qsl_text(qs)]
+        self.assertListEqual([("foo", u"\ufffdwut"), ("bar", "baz")], result)
+
     def test_binary_decoding_error(self):
         self.assertRaises(UnicodeDecodeError, self._callFUT, b"\xff", "utf-8")
 
