@@ -130,8 +130,8 @@ if PY3:  # pragma: no cover
     def url_unquote(s):
         return unquote(s.encode("ascii")).decode("latin-1")
 
-    def parse_qsl_text(qs, encoding="utf-8"):
-        qs = qs.encode("latin-1")
+    def parse_qsl_text(qs, encoding="utf-8", errors="replace"):
+        qs = qs.encode("latin-1", errors=errors)
         qs = qs.replace(b"+", b" ")
         pairs = [s2 for s1 in qs.split(b"&") for s2 in s1.split(b";") if s2]
         for name_value in pairs:
@@ -140,16 +140,16 @@ if PY3:  # pragma: no cover
                 nv.append("")
             name = unquote(nv[0])
             value = unquote(nv[1])
-            yield (name.decode(encoding), value.decode(encoding))
+            yield (name.decode(encoding, errors=errors), value.decode(encoding, errors=errors))
 
 
 else:
     from urlparse import parse_qsl
 
-    def parse_qsl_text(qs, encoding="utf-8"):
+    def parse_qsl_text(qs, encoding="utf-8", errors="replace"):
         qsl = parse_qsl(qs, keep_blank_values=True, strict_parsing=False)
         for (x, y) in qsl:
-            yield (x.decode(encoding), y.decode(encoding))
+            yield (x.decode(encoding, errors=errors), y.decode(encoding, errors=errors))
 
 
 if PY3:
