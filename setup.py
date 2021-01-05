@@ -22,7 +22,7 @@ docs_extras = ["Sphinx >= 1.7.5", "pylons-sphinx-themes"]
 
 setup(
     name="WebOb",
-    version="1.9.0dev0",
+    version="1.8.6+dd.3",
     description="WSGI request and response object",
     long_description=README + "\n\n" + CHANGES,
     classifiers=[
