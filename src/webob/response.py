@@ -396,7 +396,14 @@ class Response(object):
             self.body
         parts += map("%s: %s".__mod__, self.headerlist)
         if not skip_body and self.body:
-            parts += ["", text_(self.body if PY2 else self.text, self.default_charset, errors="replace")]
+            parts += [
+                "",
+                text_(
+                    self.body if PY2 else self.text,
+                    self.default_charset,
+                    errors="replace",
+                ),
+            ]
         return "\r\n".join(parts)
 
     #

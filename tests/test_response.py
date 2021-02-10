@@ -173,7 +173,7 @@ def test_content_type_supports_unicode():
 
 
 def test_content_type_mismatch():
-    charset="latin-1"
+    charset = "latin-1"
     resp = Response()
     resp.status_code = 200
     resp.default_charset = charset
