@@ -11,6 +11,7 @@ from webob.compat import (
     PY2,
     bytes_,
     native_,
+    text_,
     string_types,
     text_type,
     url_quote,
@@ -395,7 +396,7 @@ class Response(object):
             self.body
         parts += map("%s: %s".__mod__, self.headerlist)
         if not skip_body and self.body:
-            parts += ["", self.body if PY2 else self.text]
+            parts += ["", text_(self.body if PY2 else self.text, self.default_charset, errors="replace")]
         return "\r\n".join(parts)
 
     #
