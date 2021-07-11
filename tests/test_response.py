@@ -7,8 +7,7 @@ import pytest
 from webob.request import BaseRequest
 from webob.request import Request
 from webob.response import Response
-from webob.compat import text_
-from webob.compat import bytes_
+from webob.compat import text_, bytes_, PY2
 from webob import cookies
 
 
@@ -171,6 +170,19 @@ def test_content_type_supports_unicode():
     resp = Response()
     resp.content_type = content_type
     assert isinstance(resp.headers["Content-Type"], str)
+
+
+def test_content_type_mismatch():
+    charset = "latin-1"
+    resp = Response()
+    resp.status_code = 200
+    resp.default_charset = charset
+    resp.content_type = "text/html"
+    if PY2:
+        resp.body = "foo.bar:\xed\x00\xeb\xef\xeb\xec"
+    else:
+        resp.text = u"foo.bar:\xed\x00\xeb\xef\xeb\xec"
+    assert "foo.bar:\xed\x00\xeb\xef\xeb\xec" in str(resp)
 
 
 @pytest.mark.skipif("sys.version_info < (3, 0)")
